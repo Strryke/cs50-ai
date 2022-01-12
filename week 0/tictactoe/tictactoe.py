@@ -27,9 +27,9 @@ def player(board):
             if column != EMPTY:
                 turns += 1
     if turns % 2 == 0:
-        return 0
-    else:
         return X
+    else:
+        return O
 
 
 def actions(board):
@@ -48,12 +48,12 @@ def result(board, action):
     """
     Returns the board that results from making move (i, j) on the board.
     """
-    if action not in actions(board):
-        raise Exception("Invalid Action")
 
     new_board = copy.deepcopy(board)
     symbol = player(board)
     row, column = action
+    if board[row][column] != EMPTY:
+        raise Exception("Invalid Action")
     new_board[row][column] = symbol
     return new_board
 
@@ -67,7 +67,7 @@ def winner(board):
             return row[0]
 
     for i in range(3):
-        if board[0][i] == board[1][i] == board[2][i] != None:
+        if board[0][i] == board[1][i] == board[2][i] and board[0][i] != None:
             return board[0][i]
 
     if board[0][0] == board[1][1] == board[2][2] != None:
@@ -81,9 +81,11 @@ def terminal(board):
     """
     Returns True if game is over, False otherwise.
     """
-    if winner == X or 0:
+    win_player = winner(board)
+
+    if win_player == X or win_player == O:
         return True
-    elif actions == None:
+    elif len(actions(board)) == 0:
         return True
     else:
         return False
@@ -93,9 +95,11 @@ def utility(board):
     """
     Returns 1 if X has won the game, -1 if O has won, 0 otherwise.
     """
-    if winner == X:
+    win_player = winner(board)
+
+    if win_player == X:
         return 1
-    elif winner == 0:
+    elif win_player == O:
         return -1
     else:
         return 0
